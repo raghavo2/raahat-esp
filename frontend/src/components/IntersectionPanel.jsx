@@ -1,23 +1,44 @@
-function IntersectionPanel({ intersection }) {
-  const { id, lanes, decision } = intersection;
+function IntersectionPanel({ intersection, isSelected }) {
+  const { id, lanes, decision, signal } = intersection;
+
+  const remaining = signal?.remainingSeconds || 0;
+  const mode = signal?.mode || "AUTO";
 
   return (
-    <div style={{
-      border: "1px solid #333",
-      borderRadius: "10px",
-      padding: "10px",
-      marginBottom: "10px",
-      background: "#020617"
-    }}>
-      <h3>🚦 {id}</h3>
+    <div className={`int-panel-card ${isSelected ? "selected" : ""}`}>
+      <div className="int-panel-header">
+        <h3 className="int-panel-title">🚦 {id}</h3>
+        <span className={`int-mode-badge ${mode === "MANUAL" ? "manual" : "auto"}`}>
+          {mode}
+        </span>
+      </div>
 
-      <p><b>Active Lane:</b> {decision?.active_lane}</p>
-      <p><b>Reason:</b> {decision?.reason}</p>
+      <div className="int-panel-stats">
+        <div className="int-panel-stat">
+          <span className="int-stat-label">Active Lane</span>
+          <span className="int-stat-value green-glow">{decision?.active_lane || "—"}</span>
+        </div>
+        <div className="int-panel-stat">
+          <span className="int-stat-label">Reason</span>
+          <span className="int-stat-value">{decision?.reason || "—"}</span>
+        </div>
+        <div className="int-panel-stat">
+          <span className="int-stat-label">Time Left</span>
+          <span className={`int-stat-value ${remaining <= 5 ? "urgent" : ""}`}>
+            {remaining}s
+          </span>
+        </div>
+      </div>
 
-      <div>
+      <div className="int-panel-lanes">
         {lanes.map((lane, i) => (
-          <div key={i} style={{ fontSize: "13px" }}>
-            Lane {lane.lane} → {lane.density} {lane.emergency && "🚨"}
+          <div
+            key={i}
+            className={`int-lane-chip ${lane.lane === decision?.active_lane ? "active" : ""} ${lane.emergency ? "emergency" : ""}`}
+          >
+            <span className="lane-letter">{lane.lane}</span>
+            <span className="lane-density">{lane.density}</span>
+            {lane.emergency && <span className="lane-emg">🚨</span>}
           </div>
         ))}
       </div>

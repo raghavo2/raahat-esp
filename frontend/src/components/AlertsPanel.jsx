@@ -1,16 +1,17 @@
 function AlertsPanel({ alerts }) {
   return (
-    <div style={{ border: "1px solid #444", padding: "10px" }}>
+    <div style={{ maxHeight: "300px", overflowY: "auto" }}>
       {alerts.length === 0 ? (
-        <p>No alerts yet</p>
+        <p style={{ color: "#64748b", fontSize: "12px", textAlign: "center" }}>No activity yet</p>
       ) : (
-        <ul>
+        <div className="alert-list">
           {alerts.map((a, i) => (
-            <li key={i}>
-              {a.time} - {a.message}
-            </li>
+            <div key={i} className={`alert-item ${a.type || ""}`}>
+              <span className="alert-time">{a.time}</span>
+              {a.message}
+            </div>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );

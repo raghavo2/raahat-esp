@@ -1,46 +1,13 @@
 const { decideSignal } = require("../services/decision.service");
 const Traffic = require("../models/traffic.model");
-const { manualOverride } = require("../services/signal.controller");
-const { fakeAI } = require("../utils/fakeAI");
-
-let currentState = { intersections: [] };
-
-// setInterval(async () => {
-//     const lanes = ["A", "B", "C", "D"].map(fakeAI);
-
-//     const decision = decideSignal(lanes);
-//     currentState = {
-//         ...decision,
-//         lanes
-//     };
-
-//     await Traffic.create({
-//         lanes,
-//         decision
-//     });
-
-//     console.log("Saved + Updated:", decision);
-// }, 3000);
-
-// exports.analyzeTraffic = async (req, res) => {
-//     const { lanes } = req.body;
-
-//     const decision = decideSignal(lanes);
-//     currentState = decision;
-
-//     await Traffic.create({
-//         lanes,
-//         decision
-//     });
-
-//     res.json(decision);
-// };
-
 const {
     updateSignal,
-    getCurrentSignal
+    manualOverride,
+    getCurrentSignal,
+    getSignalState
 } = require("../services/signal.controller");
 
+let currentState = { intersections: [] };
 
 exports.analyzeTraffic = async (req, res) => {
     const { intersections } = req.body;
@@ -52,7 +19,6 @@ exports.analyzeTraffic = async (req, res) => {
     // 🧠 Decision per intersection
     const result = intersections.map(int => {
         const decision = decideSignal(int.lanes);
-
         const signal = updateSignal(decision);
 
         return {
@@ -66,7 +32,7 @@ exports.analyzeTraffic = async (req, res) => {
 
     await Traffic.create(currentState);
 
-    console.log("Updated State:", currentState);
+    console.log("Updated State:", JSON.stringify(currentState, null, 2));
 
     res.json(currentState);
 };
@@ -77,7 +43,12 @@ exports.getHistory = async (req, res) => {
 };
 
 exports.getCurrent = (req, res) => {
-    res.json(currentState);
+    // Attach current signal state to response
+    const signalState = getSignalState();
+    res.json({
+        ...currentState,
+        signalState
+    });
 };
 
 exports.manualControl = (req, res) => {
@@ -89,4 +60,8 @@ exports.manualControl = (req, res) => {
 
     const signal = manualOverride(lane, duration);
     res.json(signal);
+};
+
+exports.getSignalStatus = (req, res) => {
+    res.json(getSignalState());
 };

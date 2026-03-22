@@ -6,6 +6,7 @@ import AlertsPanel from "../components/AlertsPanel";
 import MapView from "../components/MapView";
 import IntersectionPanel from "../components/IntersectionPanel";
 import ManualControlPanel from "../components/ManualControlPanel";
+import DeviceStatusPanel from "../components/DeviceStatusPanel";
 import VideoFeedPanel from "../components/VideoFeedPanel";
 import VideoUploadPanel from "../components/VideoUploadPanel";
 
@@ -127,6 +128,10 @@ function Dashboard() {
         <h2>🎛️ Control Center</h2>
 
         <ManualControlPanel selectedIntersection={selectedIntersection} />
+
+        <div className="right-section-divider">
+          <DeviceStatusPanel />
+        </div>
 
         <div className="right-section-divider">
           <h3 className="section-heading">📋 Activity Log</h3>

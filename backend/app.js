@@ -4,6 +4,7 @@ const cors = require("cors");
 const trafficRoutes = require("./routes/traffic.routes");
 const videoRoutes = require("./routes/video.routes");
 const intersectionRoutes = require("./routes/intersection.routes");
+const esp32Routes = require("./routes/esp32.routes");
 
 const app = express();
 
@@ -19,5 +20,6 @@ app.get("/health", (req, res) => {
 app.use("/traffic", trafficRoutes);
 app.use("/video", videoRoutes);
 app.use("/intersections", intersectionRoutes);
+app.use("/esp32", esp32Routes);
 
 module.exports = app;

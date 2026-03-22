@@ -51,7 +51,7 @@ function Dashboard() {
         for (const int of (res.data.intersections || [])) {
           const signal = int.signal;
           if (signal?.active_lane) {
-            const msg = `${int.id}: Lane ${signal.active_lane} → GREEN (${signal.mode})`;
+            const msg = `${int.name || int.id}: Lane ${signal.active_lane} → GREEN (${signal.mode})`;
             setAlerts(prev => {
               if (prev[0]?.message === msg) return prev;
               return [
@@ -67,7 +67,7 @@ function Dashboard() {
         }
 
       } catch (err) {
-        // silent — server might not be running yet
+        // silent
       }
     };
 
@@ -79,13 +79,15 @@ function Dashboard() {
   return (
     <div className={`dashboard ${isEmergency ? "emergency" : ""}`}>
 
-      {/* LEFT PANEL */}
+      {/* LEFT PANEL — Intersections + Upload */}
       <div className="panel left">
         <h2>🚦 Intersections</h2>
 
         {data.intersections.length === 0 ? (
-          <p style={{ color: "#64748b", fontSize: "12px", padding: "12px" }}>
-            No intersections registered yet. Register via POST /intersections API.
+          <p className="empty-state">
+            No intersections registered yet.
+            <br />
+            <span style={{ fontSize: "10px", opacity: 0.6 }}>POST /intersections to register</span>
           </p>
         ) : (
           data.intersections.map((int) => (
@@ -101,34 +103,32 @@ function Dashboard() {
             </div>
           ))
         )}
+
+        {/* Upload section — in left panel now */}
+        <div className="left-section-divider">
+          <VideoUploadPanel selectedIntersection={selectedIntersection} />
+        </div>
       </div>
 
-      {/* CENTER PANEL */}
+      {/* CENTER PANEL — Map + Video Feed */}
       <div className="panel center">
-
         <MapView
           data={data}
           onSelectIntersection={setSelectedIntersection}
           selectedIntersection={selectedIntersection}
         />
 
-        {/* 4-Lane Video Feed Grid — under the map */}
         <VideoFeedPanel intersectionId={selectedIntersection} />
-
       </div>
 
-      {/* RIGHT PANEL */}
+      {/* RIGHT PANEL — Control Center + Activity */}
       <div className="panel right">
         <h2>🎛️ Control Center</h2>
 
         <ManualControlPanel selectedIntersection={selectedIntersection} />
 
-        <div style={{ marginTop: "16px" }}>
-          <VideoUploadPanel selectedIntersection={selectedIntersection} />
-        </div>
-
-        <div style={{ marginTop: "16px" }}>
-          <h3 style={{ color: "#38bdf8", marginBottom: "8px", fontSize: "14px" }}>📋 Activity Log</h3>
+        <div className="right-section-divider">
+          <h3 className="section-heading">📋 Activity Log</h3>
           <AlertsPanel alerts={alerts} />
         </div>
       </div>

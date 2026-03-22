@@ -23,3 +23,5 @@ Thumbs.db
 # logs
 logs/
 *.log
+
+API_CONTRACT.md

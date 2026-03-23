@@ -152,6 +152,9 @@ function ManualControlPanel({ selectedIntersection }) {
         <p className="override-note">
           ⚠️ Emergency vehicles will automatically override manual signals
         </p>
+        <p className="override-note" style={{ color: "#f59e0b" }}>
+          🟡 During manual override, all yellow signals will blink on the ESP32 to indicate caution — traffic can still proceed carefully.
+        </p>
       </div>
     </div>
   );

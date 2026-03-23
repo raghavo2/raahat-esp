@@ -39,7 +39,7 @@
 // ========================================================
 
 // WiFi credentials (your phone hotspot or WiFi router)
-const char* WIFI_SSID     = "Excitel_mywifi_o2_5G";
+const char* WIFI_SSID     = "Excitel_mywifi_o2";
 const char* WIFI_PASSWORD = "@zxcvbnm";
 
 // Backend server (your laptop's LAN IP — NOT localhost!)

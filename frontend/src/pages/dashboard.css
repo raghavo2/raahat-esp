@@ -808,9 +808,20 @@
     animation: pulse-chip-red 1s infinite;
 }
 
+.int-lane-chip.yellow-caution {
+    border-color: #f59e0b;
+    background: rgba(245, 158, 11, 0.08);
+    animation: pulse-chip-yellow 1s infinite;
+}
+
 @keyframes pulse-chip-red {
     0%, 100% { box-shadow: 0 0 4px rgba(255, 61, 61, 0.2); }
     50% { box-shadow: 0 0 12px rgba(255, 61, 61, 0.5); }
+}
+
+@keyframes pulse-chip-yellow {
+    0%, 100% { box-shadow: 0 0 4px rgba(245, 158, 11, 0.2); }
+    50% { box-shadow: 0 0 12px rgba(245, 158, 11, 0.5); }
 }
 
 .lane-letter {

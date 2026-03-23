@@ -3,6 +3,7 @@ function IntersectionPanel({ intersection, isSelected }) {
 
   const remaining = signal?.remainingSeconds || 0;
   const mode = signal?.mode || "AUTO";
+  const isManual = mode === "MANUAL";
 
   return (
     <div className={`int-panel-card ${isSelected ? "selected" : ""}`}>
@@ -30,17 +31,38 @@ function IntersectionPanel({ intersection, isSelected }) {
         </div>
       </div>
 
+      {/* Manual override yellow indicator */}
+      {isManual && (
+        <div style={{
+          background: "rgba(245, 158, 11, 0.12)",
+          border: "1px solid rgba(245, 158, 11, 0.3)",
+          borderRadius: "6px",
+          padding: "4px 8px",
+          marginBottom: "8px",
+          fontSize: "11px",
+          color: "#f59e0b",
+          textAlign: "center"
+        }}>
+          🟡 Yellow signals blinking — caution mode
+        </div>
+      )}
+
       <div className="int-panel-lanes">
-        {lanes.map((lane, i) => (
-          <div
-            key={i}
-            className={`int-lane-chip ${lane.lane === decision?.active_lane ? "active" : ""} ${lane.emergency ? "emergency" : ""}`}
-          >
-            <span className="lane-letter">{lane.lane}</span>
-            <span className="lane-density">{lane.density}</span>
-            {lane.emergency && <span className="lane-emg">🚨</span>}
-          </div>
-        ))}
+        {lanes.map((lane, i) => {
+          const isActive = lane.lane === decision?.active_lane;
+          const isYellow = isManual && !isActive;
+
+          return (
+            <div
+              key={i}
+              className={`int-lane-chip ${isActive ? "active" : ""} ${isYellow ? "yellow-caution" : ""} ${lane.emergency ? "emergency" : ""}`}
+            >
+              <span className="lane-letter">{lane.lane}</span>
+              <span className="lane-density">{isYellow ? "caution" : lane.density}</span>
+              {lane.emergency && <span className="lane-emg">🚨</span>}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
